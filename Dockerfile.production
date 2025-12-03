@@ -1,0 +1,48 @@
+FROM python:3.10-slim
+
+ARG project_name
+ARG base_image
+ARG branch
+ARG commit_date
+ARG commit_hash
+ARG commit_message
+ARG build_date
+ARG build_id
+ARG last_commit_author
+ARG last_commit_date
+ARG last_commit_hash
+ARG last_commit_message
+ARG api_version
+ARG packages
+
+LABEL project_name="$project_name" \
+      base_image="$base_image" \
+      branch="$branch" \
+      commit_date="$commit_date" \
+      commit_hash="$commit_hash" \
+      commit_message="$commit_message" \
+      build_date="$build_date" \
+      build_id="$build_id" \
+      last_commit_author="$last_commit_author" \
+      last_commit_date="$last_commit_date" \
+      last_commit_hash="$last_commit_hash" \
+      last_commit_message="$last_commit_message" \
+      api_version="$api_version" \
+      packages="$packages"
+
+WORKDIR /app
+
+# Install system dependencies (optional but useful for debugging/logging)
+RUN apt-get update && apt-get install -y curl procps && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy your code and dependencies
+COPY probe_controller.py /app/probe_controller.py
+COPY requirements.txt /app/requirements.txt
+COPY healthz.sh /healthz.sh
+RUN chmod +x /healthz.sh
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Run the operator
+ENTRYPOINT ["kopf", "run", "/app/probe_controller.py"]
