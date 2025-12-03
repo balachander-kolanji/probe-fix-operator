@@ -1,0 +1,7 @@
+apiVersion: v2
+name: probe-fix-operator
+description: Operator to patch timeoutSeconds in liveness/readiness probes
+type: application
+version: 0.1.0
+appVersion: "1.0"
+

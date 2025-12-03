@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: probe-fix-operator
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.name }}
+    namespace: stanley
+roleRef:
+  kind: ClusterRole
+  name: probe-fix-operator
+  apiGroup: rbac.authorization.k8s.io
+
